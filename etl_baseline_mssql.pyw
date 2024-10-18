@@ -119,17 +119,19 @@ def insert_baseline(dataframe):
                 conn.commit()
 
     except Exception as ex:
+        message = f"Erro ao inserir dados, transação revertida: {ex}\nindex: {index}\nrow: {row}"
+        print(message)
         conn.rollback()
-        print(f"Erro ao inserir dados, transação revertida: {ex}")
-    finally:
-        print("Processo de inserção finalizado")
+        raise Exception(message)
 
 
 class ETLBaselineMSSQL:
     def __init__(self, window):
-        window.title("Salvar baseline no TOTVS")
+        window.title("Eureka® Monitor de progresso")
         self.start_time = time.time()
 
+        self.qp_label = tk.Label(window, text="")
+        self.qp_label.pack(pady=15)
         self.status_label = tk.Label(window, text="")
         self.status_label.pack(pady=20)
 
@@ -142,6 +144,7 @@ class ETLBaselineMSSQL:
             codigo_qp = get_env_var_windows('QP_BASELINE')
             codigo_qp_formatado = codigo_qp.replace('QP-E', '').zfill(6)
             validar_codigo_qp = qp_validate(codigo_qp)
+            self.qp_label.config(text=f"Salvar baseline da {codigo_qp} no TOTVS")
             self.status_label.config(text=f"Iniciando processo..."
                                           f"{codigo_qp_formatado.replace('0', '')} no TOTVS")
             time.sleep(delay)
@@ -153,6 +156,10 @@ class ETLBaselineMSSQL:
                 time.sleep(delay)
                 self.update_progress(20)
                 dataframe_original = pd.read_excel(excel_filepath, sheet_name="PROJETO", engine="openpyxl")
+
+                self.status_label.config(text="Transformando dados...")
+                time.sleep(delay)
+                self.update_progress(30)
                 dataframe_baseline = dataframe_original.copy()
                 colunas_para_remover = ['ID', 'VISÃO GERAL', 'LINK', 'OBSERVAÇÕES', 'PEÇA\nREPOSIÇÃO', 'TOTVs', 'QTDE',
                                         '%', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -160,10 +167,6 @@ class ETLBaselineMSSQL:
                 dataframe_baseline = dataframe_baseline.drop(columns=colunas_para_remover)
                 dataframe_baseline = dataframe_baseline.fillna('')
                 dataframe_baseline.insert(0, 'QP', codigo_qp_formatado)
-
-                self.status_label.config(text="Transformando dados...")
-                time.sleep(delay)
-                self.update_progress(30)
 
                 baseline_exist = verify_if_baseline_exists(codigo_qp_formatado)
                 self.update_progress(40)
@@ -173,22 +176,24 @@ class ETLBaselineMSSQL:
                     if not baseline_deleted:
                         return
 
-                insert_baseline(dataframe_baseline)
                 self.status_label.config(text="Carregando dados...")
                 time.sleep(delay)
+                insert_baseline(dataframe_baseline)
                 self.update_progress(80)
 
-                delete_file(excel_filepath)
+                # delete_file(excel_filepath)
                 end_time = time.time()
                 elapsed = end_time - self.start_time
-                self.status_label.config(text=f"Processo finalizado com sucesso!\n\n{elapsed:.3f} segundos"
+                self.status_label.config(text=f"✔️ Processo finalizado com sucesso!\n\n{elapsed:.3f} segundos"
                                               f"\n\n🦾🤖 EUREKA®")
                 self.update_progress(100)
             else:
                 message = 'Código da QP inválido! Por favor corrigir o código da QP no arquivo da baseline.'
                 raise Exception(message)
         except Exception as ex:
-            exibir_mensagem('Eureka® Erro', {ex}, 'warning')
+            self.status_label.config(text='❌ Processo cancelado!')
+            self.update_progress(100)
+            exibir_mensagem('Eureka® Erro de processamento', {ex}, 'warning')
             return None
 
     def start_task(self):
