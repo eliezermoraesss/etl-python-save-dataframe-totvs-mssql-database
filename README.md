@@ -100,7 +100,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://www.m
 
 ## ✨ Acknowledgements
 
-- [Tkinter Documentation]((https://docs.python.org/3/library/tkinter.html)) for the GUI framework.
+- [Tkinter Documentation](https://docs.python.org/3/library/tkinter.html) for the GUI framework.
 - [Pandas Documentation](https://pandas.pydata.org/docs/) for efficient data manipulation.
 - [PyODBC Documentation](https://github.com/mkleehammer/pyodbc) for MSSQL connectivity.
 
