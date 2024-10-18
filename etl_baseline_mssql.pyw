@@ -98,14 +98,17 @@ def delete_if_baseline_exists(codigo_qp):
         return False
 
 
-def insert_baseline(dataframe):
+def insert_baseline(self, dataframe):
     try:
         with pyodbc.connect(
                 f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};'
                 f'PWD={password}') as conn:
             cursor = conn.cursor()
+            total_rows = len(dataframe)
 
             for index, row in dataframe.iterrows():
+                progress = 25 + (index / (total_rows - 1)) * 74
+                self.update_progress(progress)
                 insert_query = """
                 INSERT INTO enaplic_management.dbo.tb_baseline (
                     cod_qp, equipamento, grupo, nivel, codigo, codigo_pai, descricao, tipo, qtde_bl, unid_medida,
@@ -116,7 +119,7 @@ def insert_baseline(dataframe):
                                row['CÓDIGO'], row['CÓDIGO PAI'], row['DESCRIÇÃO'], row['TIPO'], row['QTDE\nBL'],
                                row['UND'], row['ESPECIFICAÇÕES'], row['QTDE PROJ.'], row['QTDE\nTOTAL'],
                                row['STATUS'], row['STATUS_OP'])
-                conn.commit()
+            conn.commit()
 
     except Exception as ex:
         message = f"Erro ao inserir dados, transação revertida: {ex}\nindex: {index}\nrow: {row}"
@@ -148,38 +151,41 @@ class ETLBaselineMSSQL:
             self.status_label.config(text=f"Iniciando processo..."
                                           f"{codigo_qp_formatado.replace('0', '')} no TOTVS")
             time.sleep(delay)
-            self.update_progress(10)
+            self.update_progress(5)
 
             if validar_codigo_qp:
                 excel_filepath = get_excel_filepath(codigo_qp)
                 self.status_label.config(text="Extraindo dados...")
                 time.sleep(delay)
-                self.update_progress(20)
+                self.update_progress(10)
                 dataframe_original = pd.read_excel(excel_filepath, sheet_name="PROJETO", engine="openpyxl")
 
                 self.status_label.config(text="Transformando dados...")
                 time.sleep(delay)
-                self.update_progress(30)
+                self.update_progress(15)
                 dataframe_baseline = dataframe_original.copy()
                 colunas_para_remover = ['ID', 'VISÃO GERAL', 'LINK', 'OBSERVAÇÕES', 'PEÇA\nREPOSIÇÃO', 'TOTVs', 'QTDE',
                                         '%', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
                 dataframe_baseline = dataframe_baseline.drop(columns=colunas_para_remover)
                 dataframe_baseline = dataframe_baseline.fillna('')
+
+                colunas_qtde = ['QTDE\nBL', 'QTDE PROJ.', 'QTDE\nTOTAL']
+                dataframe_baseline[colunas_qtde] = dataframe_baseline[colunas_qtde].replace('', 0)
+
                 dataframe_baseline.insert(0, 'QP', codigo_qp_formatado)
 
                 baseline_exist = verify_if_baseline_exists(codigo_qp_formatado)
-                self.update_progress(40)
+                self.update_progress(20)
                 if baseline_exist:
                     baseline_deleted = delete_if_baseline_exists(codigo_qp_formatado)
-                    self.update_progress(50)
+                    self.update_progress(25)
                     if not baseline_deleted:
                         return
 
                 self.status_label.config(text="Carregando dados...")
                 time.sleep(delay)
-                insert_baseline(dataframe_baseline)
-                self.update_progress(80)
+                insert_baseline(self, dataframe_baseline)
 
                 # delete_file(excel_filepath)
                 end_time = time.time()
@@ -213,5 +219,5 @@ if __name__ == '__main__':
     etlBaseline.start_task()
 
     root.attributes('-topmost', True)
-    root.geometry("400x220")
+    root.geometry("400x280")
     root.mainloop()
