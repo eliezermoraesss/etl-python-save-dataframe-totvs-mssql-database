@@ -84,9 +84,9 @@ export QP_BASELINE=QP-E1234
 1. **Setup MSSQL:** The application reads MSSQL credentials from the configuration file.
 2. **Data Extraction:** Reads and validates baseline data from an Excel file.
 3. **Database Operations:**
-- Verifies if the baseline already exists in the database.
-- Deletes existing records, if found.
-- Inserts the new baseline data.
+    - Verifies if the baseline already exists in the database.
+    - Deletes existing records, if found.
+    - Inserts the new baseline data.
 4. **Progress Updates:** The application shows progress in the GUI.
 5. **File Cleanup:** After completion, the source Excel file is deleted from the system.
 
