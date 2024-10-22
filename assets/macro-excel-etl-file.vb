@@ -4,7 +4,7 @@ Public Declare PtrSafe Function ShellExecute Lib "shell32.dll" Alias "ShellExecu
 
 Dim lLinha As Long
 
-'Funï¿½ï¿½o que identifica a existï¿½ncia do arquivo
+'Função que identifica a existência do arquivo
 Private Function lfVerificaArquivo(ByVal lStr As String) As Boolean
 
     lfVerificaArquivo = True
@@ -12,7 +12,7 @@ Private Function lfVerificaArquivo(ByVal lStr As String) As Boolean
     'Identifica se o arquivo existe
     If Dir(lStr) = vbNullString Then
         lfVerificaArquivo = False
-'       Worksheets("BASELINE ENG M").Cells(lLinha, 24).Value = "Indisponï¿½vel"
+'       Worksheets("BASELINE ENG M").Cells(lLinha, 24).Value = "Indisponível"
         Worksheets("PROJETO").Cells(lLinha, 12).Value = Empty
     Else
 '        Worksheets("PROJETO").Cells(lLinha, 24).Value = "OK"
@@ -21,7 +21,7 @@ Private Function lfVerificaArquivo(ByVal lStr As String) As Boolean
     
 End Function
 
-'Procedimento que realiza um loop por todos os arquivos de configuraï¿½ï¿½o
+'Procedimento que realiza um loop por todos os arquivos de configuração
 Public Sub PNG()
 
     Application.ScreenUpdating = False
@@ -32,7 +32,7 @@ Public Sub PNG()
     Worksheets("PROJETO").Range("L2:L10000").ClearContents
     
     Dim lUltimaLinhaAtiva   As Long
-    Dim endereï¿½o As String
+    Dim endereço As String
     
     lLinha = 2
     
@@ -42,21 +42,21 @@ Public Sub PNG()
     'Realiza um loop por todos os registros
     While lLinha <= lUltimaLinhaAtiva
     
-    endereï¿½o = "\\192.175.175.4\dados\EMPRESA\PROJETOS\PDF-OFICIAL\" & Worksheets("PROJETO").Cells(lLinha, 6).Value & ".png"
-        'Se nï¿½o for encontrado um arquivo o procedimento ï¿½ abortado
-        If lfVerificaArquivo(endereï¿½o) = False Then
+    endereço = "\\192.175.175.4\dados\EMPRESA\PROJETOS\PDF-OFICIAL\" & Worksheets("PROJETO").Cells(lLinha, 6).Value & ".png"
+        'Se não for encontrado um arquivo o procedimento é abortado
+        If lfVerificaArquivo(endereço) = False Then
             'Exit Sub
         End If
         lLinha = lLinha + 1
     Wend
     
-    MsgBox "Mapeamento de arquivos PDF concluï¿½do"
+    MsgBox "Mapeamento de arquivos PDF concluído"
     
     Application.Calculation = xlAutomatic
     Application.ScreenUpdating = True
     
     lUltimaLinhaAtiva = Empty
-    endereï¿½o = Empty
+    endereço = Empty
     lLinha = Empty
 End Sub
 
@@ -84,7 +84,7 @@ If Sheets("BASELINE").Range("A9").Value > 0 Or Sheets("BASELINE").Range("A12").V
         End
     Else
         If Sheets("BASELINE").Range("A12").Value < 1 Or Sheets("BASELINE").Range("A12").Value = "" Then
-            MsgBox "NIVEIS MAIOR QUE 0 ï¿½ NECESSï¿½RIO DEFINIR A LINHA DE INSERï¿½ï¿½O"
+            MsgBox "NIVEIS MAIOR QUE 0 É NECESSÁRIO DEFINIR A LINHA DE INSERÇÃO"
             End
         End If
     End If
@@ -160,7 +160,7 @@ uln = Worksheets("BASELINE").Cells(Rows.Count, 25).End(xlUp).Row
     Application.Calculation = xlManual
     
     Range(Cells(2, 35), Cells(uln, 35)).Select
-    Selection.FormulaR1C1 = "TEMPORï¿½RIO"
+    Selection.FormulaR1C1 = "TEMPORÁRIO"
 
 i = Empty
 
@@ -222,7 +222,7 @@ Sheets("BASELINE").Range("A9").Value = Empty
 Sheets("BASELINE").Range("A12").Value = Empty
 
 Call TAB_PROJETO
-Call DESCRIï¿½ï¿½ES
+Call DESCRIÇÕES
 
 Cells.Select
 Cells.EntireColumn.AutoFit
@@ -365,7 +365,7 @@ i = ActiveCell.Row
     Cells(i, 15).ClearContents
     Cells(i, 16).ClearContents
     
-    Cells(i - 1, 15).Value = "SUBSTITUï¿½DO"
+    Cells(i - 1, 15).Value = "SUBSTITUÍDO"
     Cells(i - 1, 18).Value = 0
     
 i = Empty
@@ -405,7 +405,7 @@ Application.Calculation = xlManual
     Range("AB2").FormulaR1C1 = "=IF(VALUE(RC5)>VALUE(R1C),R[-1]C,IF(VALUE(RC5)=VALUE(R1C),IF((RC17<>""OK""),0,RC18),1))"
     Range("AC2").FormulaR1C1 = "=IF(VALUE(RC5)>VALUE(R1C),R[-1]C,IF(VALUE(RC5)=VALUE(R1C),IF((RC17<>""OK""),0,RC18),1))"
     Range("AD2").FormulaR1C1 = "=PRODUCT(RC[-10]:RC[-1])"
-    Range("AE2").FormulaR1C1 = "=IF(RC[-16]=""SUBSTITUï¿½DO"",""FINALIZADO"",IF(RC[-16]=""DESCONSIDERAR"",""FINALIZADO"",IF(OR(RC[-16]<>""PRONTO"",RC[-13]="""",RC[-14]<>""OK"",RC[-15]<>""OK""),""PENDENTE"",""FINALIZADO"")))"
+    Range("AE2").FormulaR1C1 = "=IF(RC[-16]=""SUBSTITUÍDO"",""FINALIZADO"",IF(RC[-16]=""DESCONSIDERAR"",""FINALIZADO"",IF(OR(RC[-16]<>""PRONTO"",RC[-13]="""",RC[-14]<>""OK"",RC[-15]<>""OK""),""PENDENTE"",""FINALIZADO"")))"
     Range("S2").Select
     ActiveCell.FormulaR1C1 = "=IFERROR(RC[-1]/RC[-9],"""")"
     
@@ -422,8 +422,6 @@ Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=Fals
 Application.CutCopyMode = False
     
 End If
-
-
 
 uln = Empty
 uln1 = Empty
@@ -448,11 +446,11 @@ Sub ETLSalvarBaselineNoMSSQL()
     Dim bomPath As String
     Dim wb As Workbook
 
-    ' Obtem o nome do arquivo Excel que estï¿½ aberto
+    ' Obtem o nome do arquivo Excel que estiver aberto
     Set wb = ActiveWorkbook
     fileName = wb.Name ' Pega apenas o nome do arquivo, sem o caminho
     
-    ' Extrai o QP-EXXXX do nome do arquivo usando a funï¿½ï¿½o Mid e InStr
+    ' Extrai o QP-EXXXX do nome do arquivo usando a função Mid e InStr
     numeroQP = Mid(fileName, InStr(fileName, "QP-"), 8) ' Extrai "QP-EXXXX"
     
     Call DefinirVariavelAmbiente(numeroQP)
@@ -460,13 +458,13 @@ Sub ETLSalvarBaselineNoMSSQL()
     ' Define o caminho do arquivo na pasta TEMP
     bomPath = Environ("TEMP") & "\" & numeroQP & ".xlsm" ' Salvar como .xlsm
 
-    ' Remove o arquivo existente se jï¿½ estiver presente
+    ' Remove o arquivo existente se já estiver presente
     DeleteFileIfExists bomPath
     
-    ' Salva uma cï¿½pia do arquivo Excel na pasta TEMP como .xlsm
-    wb.SaveCopyAs fileName:=bomPath ' Salva cï¿½pia como .xlsm, sem fechar o original
+    ' Salva uma cópia do arquivo Excel na pasta TEMP como .xlsm
+    wb.SaveCopyAs fileName:=bomPath ' Salva cópia como .xlsm, sem fechar o original
 
-    ' Aguarda atï¿½ que o arquivo seja salvo
+    ' Aguarda até que o arquivo seja salvo
     While Dir(bomPath) = ""
     Wend
 
@@ -476,11 +474,11 @@ Sub ETLSalvarBaselineNoMSSQL()
 End Sub
 Sub DefinirVariavelAmbiente(valorVariavel As String)
 
-    ' Substitua "meuarquivo" pelo nome real do seu arquivo (sem a extensï¿½o)
+    ' Substitua "meuarquivo" pelo nome real do seu arquivo (sem a extensão)
     Dim numeroQP As String
     numeroQP = valorVariavel
 
-    ' Construa o comando para definir a variï¿½vel de ambiente
+    ' Construa o comando para definir a variável de ambiente
     Dim comando As String
     comando = "setx QP_BASELINE " & numeroQP
 
@@ -493,7 +491,7 @@ End Sub
 Sub ExecutarScriptPython()
     Dim CaminhoArquivo As String
     
-    ' MsgBox "Executando script Python...", vbInformation, "EUREKAï¿½"
+    ' MsgBox "Executando script Python...", vbInformation, "EUREKA®"
     
     ' Substitua o caminho abaixo pelo caminho do seu arquivo botao-salvar-bom-solidworks-totvs
     CaminhoArquivo = "\\192.175.175.4\desenvolvimento\REPOSITORIOS\etl-insert-baseline-mssql-database\etl_baseline_mssql.pyw"
@@ -518,7 +516,7 @@ On Error Resume Next
 Dim x As Long
 x = ShellExecute(formname, "Print", fileName, 0&, 0&, 3)
 End Function
-End Sub
+End Function
 
 Sub TRATAMENTO_PI()
 
@@ -627,20 +625,20 @@ End Sub
 Sub titulos()
 
 Cells(1, 21).FormulaR1C1 = "ID"
-Cells(1, 22).FormulaR1C1 = "VISï¿½OGERAL"
+Cells(1, 22).FormulaR1C1 = "VISÃOGERAL"
 Cells(1, 23).FormulaR1C1 = "EQUIPAMENTO"
 Cells(1, 24).FormulaR1C1 = "GRUPO"
 Cells(1, 25).FormulaR1C1 = "NIVEL"
-Cells(1, 26).FormulaR1C1 = "Cï¿½DIGO"
-Cells(1, 27).FormulaR1C1 = "Cï¿½DIGOPAI"
-Cells(1, 28).FormulaR1C1 = "DESCRIï¿½ï¿½O"
+Cells(1, 26).FormulaR1C1 = "CÓDIGO"
+Cells(1, 27).FormulaR1C1 = "CÓDIGOPAI"
+Cells(1, 28).FormulaR1C1 = "DESCRIÇÃO"
 Cells(1, 29).FormulaR1C1 = "TIPO"
 Cells(1, 30).FormulaR1C1 = "QTDEBL"
 Cells(1, 31).FormulaR1C1 = "UND"
 Cells(1, 32).FormulaR1C1 = "LINK"
-Cells(1, 33).FormulaR1C1 = "OBSERVAï¿½ï¿½ES"
-Cells(1, 34).FormulaR1C1 = "PEï¿½A REPOSIï¿½ï¿½O"
-Cells(1, 35).FormulaR1C1 = "ESPECIFICAï¿½ï¿½ES"
+Cells(1, 33).FormulaR1C1 = "OBSERVAÇÕES"
+Cells(1, 34).FormulaR1C1 = "PEÇA REPOSIÇÃO"
+Cells(1, 35).FormulaR1C1 = "ESPECIFICAÇÕES"
 Cells(1, 36).FormulaR1C1 = "TOTVs"
 Cells(1, 37).FormulaR1C1 = "QTDE"
 Cells(1, 38).FormulaR1C1 = "QTDEPROJ."
@@ -663,7 +661,7 @@ Cells(2, 1).Select
     
 End Sub
 
-Sub DESCRIï¿½ï¿½ES()
+Sub DESCRIÇÕES()
 
 Application.ScreenUpdating = False
 
@@ -676,7 +674,7 @@ Call lib_filtro_projeto
 
 Call definir_tabela
 
-    Range("TAB_BASELINE[DESCRIï¿½ï¿½O]").Select
+    Range("TAB_BASELINE[DESCRIÇÃO]").Select
     Selection.ClearContents
     Range("TAB_BASELINE[TIPO]").Select
     Selection.ClearContents
@@ -692,11 +690,11 @@ uln = Worksheets("PROJETO").Cells(Rows.Count, 5).End(xlUp).Row
 Application.Calculation = xlManual
 
     Range("H2").Select
-    ActiveCell.FormulaR1C1 = "=IF(XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[DESCRICAO_COMPLETA],""Nï¿½O INFORMADO"",0)=""                              "",""Nï¿½O INFORMADO"",IF(XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[DESCRICAO_COMPLETA],""Nï¿½O INFORMADO"",0)=0,""Nï¿½O INFORMADO"",XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[DESCRICAO_COMPLETA],""Nï¿½O INFORMADO"",0)))"
+    ActiveCell.FormulaR1C1 = "=IF(XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[DESCRICAO_COMPLETA],""NÃO INFORMADO"",0)=""                              "",""NÃO INFORMADO"",IF(XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[DESCRICAO_COMPLETA],""NÃO INFORMADO"",0)=0,""NÃO INFORMADO"",XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[DESCRICAO_COMPLETA],""NÃO INFORMADO"",0)))"
     Range("I2").Select
-    ActiveCell.FormulaR1C1 = "=IF(XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[TIPO],""Nï¿½O INFORMADO"",0)=""                              "",""Nï¿½O INFORMADO"",IF(XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[TIPO],""Nï¿½O INFORMADO"",0)=0,""Nï¿½O INFORMADO"",XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[TIPO],""Nï¿½O INFORMADO"",0)))"
+    ActiveCell.FormulaR1C1 = "=IF(XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[TIPO],""NÃO INFORMADO"",0)=""                              "",""NÃO INFORMADO"",IF(XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[TIPO],""NÃO INFORMADO"",0)=0,""NÃO INFORMADO"",XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[TIPO],""NÃO INFORMADO"",0)))"
     Range("K2").Select
-    ActiveCell.FormulaR1C1 = "=IF(XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[MEDIDA],""Nï¿½O INFORMADO"",0)=""                              "",""Nï¿½O INFORMADO"",IF(XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[MEDIDA],""Nï¿½O INFORMADO"",0)=0,""Nï¿½O INFORMADO"",XLOOKUP(RC6,TAB_PRODUTO[Cï¿½DIGO],TAB_PRODUTO[MEDIDA],""Nï¿½O INFORMADO"",0)))"
+    ActiveCell.FormulaR1C1 = "=IF(XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[MEDIDA],""NÃO INFORMADO"",0)=""                              "",""NÃO INFORMADO"",IF(XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[MEDIDA],""NÃO INFORMADO"",0)=0,""NÃO INFORMADO"",XLOOKUP(RC6,TAB_PRODUTO[CÓDIGO],TAB_PRODUTO[MEDIDA],""NÃO INFORMADO"",0)))"
     
 'Range("H2:I2").Select
 '
@@ -728,17 +726,17 @@ Selection.Copy
     
     Range(loc).Select
     
-    Range("TAB_BASELINE[ESPECIFICAï¿½ï¿½ES]").Select
+    Range("TAB_BASELINE[ESPECIFICAÇÕES]").Select
     With Selection.Validation
         .Delete
         .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:= _
         xlBetween, Formula1:="PRONTO,AJUSTE,DESCONSIDERAR"
         .IgnoreBlank = True
         .InCellDropdown = True
-        .InputTitle = "ESPECIFICAï¿½ï¿½ES:"
+        .InputTitle = "ESPECIFICAÇÕES:"
         .ErrorTitle = ""
         .InputMessage = _
-        "" & Chr(10) & "PRONTO = Nada muda na geometria da peï¿½a" & Chr(10) & "AJUSTE = Geometria da peï¿½a passivo de alteraï¿½ï¿½o. PN serï¿½ alterado" & Chr(10) & "DESCONSIDERAR = Part Number nï¿½o aplicï¿½vel para estre projeto"
+        "" & Chr(10) & "PRONTO = Nada muda na geometria da peça" & Chr(10) & "AJUSTE = Geometria da peça passivo de alteração. PN será alterado" & Chr(10) & "DESCONSIDERAR = Part Number não aplicável para estre projeto"
         .ErrorMessage = ""
         .ShowInput = True
         .ShowError = True
@@ -747,15 +745,15 @@ Selection.Copy
     With Selection.Validation
         .Delete
         .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:= _
-        xlBetween, Formula1:="OK,ï¿½OK"
+        xlBetween, Formula1:="OK,ÑOK"
         .IgnoreBlank = False
         .InCellDropdown = True
         .InputTitle = "TOTVs:"
-        .ErrorTitle = "ANTEï¿½ï¿½O"
+        .ErrorTitle = "ANTEÇÃO"
         .InputMessage = _
-        "" & Chr(10) & "OK = Cï¿½digo e Estrutura minima cadastrada no TOTVs" & Chr(10) & "" & Chr(10) & "Vazio ou ï¿½OK = Cadastro nï¿½o concluï¿½do"
+        "" & Chr(10) & "OK = Código e Estrutura minima cadastrada no TOTVs" & Chr(10) & "" & Chr(10) & "Vazio ou ÑOK = Cadastro não concluído"
         .ErrorMessage = _
-        "Por favor Selecionar uma das opï¿½ï¿½es da lista suspensa na cï¿½lula."
+        "Por favor Selecionar uma das opções da lista suspensa na célula."
         .ShowInput = True
         .ShowError = True
     End With
@@ -767,11 +765,11 @@ Selection.Copy
         .IgnoreBlank = False
         .InCellDropdown = True
         .InputTitle = "QTDE:"
-        .ErrorTitle = "ANTEï¿½ï¿½O"
+        .ErrorTitle = "ANTEÇÃO"
         .InputMessage = _
-        "" & Chr(10) & "OK = Cï¿½digo e Estrutura minima cadastrada no TOTVs" & Chr(10) & "" & Chr(10) & "Vazio ou ï¿½OK = Cadastro nï¿½o concluï¿½do"
+        "" & Chr(10) & "OK = Código e Estrutura minima cadastrada no TOTVs" & Chr(10) & "" & Chr(10) & "Vazio ou ÑOK = Cadastro não concluído"
         .ErrorMessage = _
-        "Por favor Selecionar uma das opï¿½ï¿½es da lista suspensa na cï¿½lula."
+        "Por favor Selecionar uma das opções da lista suspensa na célula."
         .ShowInput = True
         .ShowError = True
     End With
@@ -792,9 +790,9 @@ Sub UPDATE_PRODUTO()
     tb.Refresh
 End Sub
 
-Sub validaï¿½ï¿½o()
+Sub validação()
     Dim tb As ListObject
-    Set tb = Planilha1.ListObjects("TAB_BASELINE_VALIDAï¿½ï¿½O")
+    Set tb = Planilha1.ListObjects("TAB_BASELINE_VALIDAÇÃO")
     tb.Refresh
 End Sub
 
@@ -825,7 +823,7 @@ WS_Count = ActiveWorkbook.Worksheets.Count
 
 Set newwks = Worksheets("COMENTARIOS")
 
- newwks.Range("A1:H1").Value = Array("PLANILHA", "ENDEREï¿½O", "LINK", "AUTOR", "DATA", "RESPOSTAS", "RESOLVIDO", "COMENTARIO")
+ newwks.Range("A1:H1").Value = Array("PLANILHA", "ENDEREÇO", "LINK", "AUTOR", "DATA", "RESPOSTAS", "RESOLVIDO", "COMENTARIO")
  
  i = 1
 
@@ -892,7 +890,7 @@ End With
 
 Rows(1).Font.Color = RGB(0, 0, 0)
 
-Range("C2").Formula2R1C1 = "=HYPERLINK(CONCAT(""#"",[@Planilha],""!"",[@Endereï¿½o]),""LINK"")"
+Range("C2").Formula2R1C1 = "=HYPERLINK(CONCAT(""#"",[@Planilha],""!"",[@Endereço]),""LINK"")"
 
 Application.ScreenUpdating = True
 
@@ -997,7 +995,7 @@ uln = Planilha4.Cells(Rows.Count, 6).End(xlUp).Row
     Planilha4.Select
     Range("L1").Select
     Range("L1").FormulaR1C1 = "PER/UNIT"
-    Range("M1").FormulaR1C1 = "ULTIMA ATUALIZAï¿½ï¿½O EM DIAS"
+    Range("M1").FormulaR1C1 = "ULTIMA ATUALIZAÇÃO EM DIAS"
     Range("N1").FormulaR1C1 = "VALOR TOTAL"
     Range("O1").FormulaR1C1 = "TAXA"
     Range("P1").FormulaR1C1 = "VALOR TOTAL C/ TAXA AJUSTE"
@@ -1022,12 +1020,12 @@ uln = Planilha4.Cells(Rows.Count, 6).End(xlUp).Row
     Range("AI1").FormulaR1C1 = "7"
     Range("AJ1").FormulaR1C1 = "8"
     Range("AK1").FormulaR1C1 = "9"
-    Range("AL1").FormulaR1C1 = "=CONCAT(COUNTIFS(C[-32],""MP"",C[-29],"""")&"" - MP SEM HISTï¿½RICO DO VALOR"",CHAR(10),TEXT(R[1]C,""R$ #.##0,00""),"" - VALOR DA ESTRUTURA"",CHAR(10),R[2]C,"" - DIAS ENTREGA MP"",CHAR(10),TEXT(TEMPO_ESTIMADO!R[11]C[-31],""0""),"" - DIAS ï¿½TEIS DESENVOLVIMENTO"")"
+    Range("AL1").FormulaR1C1 = "=CONCAT(COUNTIFS(C[-32],""MP"",C[-29],"""")&"" - MP SEM HISTÓRICO DO VALOR"",CHAR(10),TEXT(R[1]C,""R$ #.##0,00""),"" - VALOR DA ESTRUTURA"",CHAR(10),R[2]C,"" - DIAS ENTREGA MP"",CHAR(10),TEXT(TEMPO_ESTIMADO!R[11]C[-31],""0""),"" - DIAS ÚTEIS DESENVOLVIMENTO"")"
     Range("AL2").FormulaR1C1 = "=SUM(C[-22])"
     Range("AL3").FormulaR1C1 = "=MAX(C[-28])"
-    Range("L2").FormulaR1C1 = "=IF(RC[-6]=""MP"",IF(RC[-3]="""",XLOOKUP(RC[-9],C[39],C[43],""SEM INFORMAï¿½ï¿½O"",0),RC[-3]),"""")"
-    Range("M2").FormulaR1C1 = "=IF(RC[-7]=""MP"",IF(RC[-6]="""",""SEM INFORMAï¿½ï¿½O"",TODAY()-RC[-6]),"""")"
-    Range("N2").FormulaR1C1 = "=IF(OR(RC[-2]="""",RC[-2]=""SEM INFORMAï¿½ï¿½O""),"""",RC[-6]*RC[-2])"
+    Range("L2").FormulaR1C1 = "=IF(RC[-6]=""MP"",IF(RC[-3]="""",XLOOKUP(RC[-9],C[39],C[43],""SEM INFORMAÇÃO"",0),RC[-3]),"""")"
+    Range("M2").FormulaR1C1 = "=IF(RC[-7]=""MP"",IF(RC[-6]="""",""SEM INFORMAÇÃO"",TODAY()-RC[-6]),"""")"
+    Range("N2").FormulaR1C1 = "=IF(OR(RC[-2]="""",RC[-2]=""SEM INFORMAÇÃO""),"""",RC[-6]*RC[-2])"
 '    Range("O2").FormulaR1C1 = "100%"
     Range("P2").FormulaR1C1 = "=IFERROR(RC[-2]*RC[-1],"""")"
     Range("Q2").FormulaR1C1 = "=SUM(RC[1]:RC[10])"
@@ -1088,7 +1086,7 @@ uln = Planilha4.Cells(Rows.Count, 6).End(xlUp).Row
     Selection.EntireColumn.Hidden = True
     
     For x = 2 To uln
-        If Cells(x, 13).Value = "SEM INFORMAï¿½ï¿½O" Then
+        If Cells(x, 13).Value = "SEM INFORMAÇÃO" Then
             Range(Cells(x, 1), Cells(x, 14)).Interior.Color = 65535
         End If
     Next x
@@ -1110,7 +1108,7 @@ Set MyRange = Range("A2:AF" & uln)
 MyRange.FormatConditions.Delete
 
 MyRange.FormatConditions.Add Type:=xlExpression, _
-        Formula1:="=$O2=""TEMPORï¿½RIO"""
+        Formula1:="=$O2=""TEMPORÁRIO"""
 MyRange.FormatConditions(1).Interior.Color = RGB(0, 0, 0)
 MyRange.FormatConditions(1).Font.Color = RGB(255, 255, 255)
 
@@ -1120,7 +1118,7 @@ MyRange.FormatConditions(2).Interior.Color = RGB(191, 191, 191)
 MyRange.FormatConditions(2).Font.Color = RGB(89, 89, 89)
 
 MyRange.FormatConditions.Add Type:=xlExpression, _
-        Formula1:="=$O2=""SUBSTITUï¿½DO"""
+        Formula1:="=$O2=""SUBSTITUÍDO"""
 MyRange.FormatConditions(3).Interior.Color = RGB(191, 191, 191)
 MyRange.FormatConditions(3).Font.Color = RGB(89, 89, 89)
 
@@ -1150,6 +1148,7 @@ MyRange.FormatConditions(8).Interior.Color = RGB(0, 255, 0)
 MyRange.FormatConditions(8).Font.Color = RGB(55, 86, 35)
 
 End Sub
+
 
 
 
