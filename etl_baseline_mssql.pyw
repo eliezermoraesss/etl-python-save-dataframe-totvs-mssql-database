@@ -142,6 +142,7 @@ class ETLBaselineMSSQL:
         self.progress.pack(pady=30)
 
     def start_etl(self):
+        excel_filepath = None
         try:
             delay = 0.4
             codigo_qp = get_env_var_windows('QP_BASELINE')
@@ -201,6 +202,8 @@ class ETLBaselineMSSQL:
             self.update_progress(100)
             exibir_mensagem('Eureka® Erro de processamento', {ex}, 'warning')
             return None
+        finally:
+            delete_file(excel_filepath)
 
     def start_task(self):
         thread = threading.Thread(target=self.start_etl)
