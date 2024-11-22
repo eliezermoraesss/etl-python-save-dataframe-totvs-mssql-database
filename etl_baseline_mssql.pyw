@@ -176,11 +176,13 @@ class ETLBaselineMSSQL:
 
                 dataframe_baseline.insert(0, 'QP', codigo_qp_formatado)
 
-                baseline_exist = verify_if_baseline_exists(codigo_qp_formatado)
+                self.status_label.config(text="Verificando se baseline já existe...")
                 self.update_progress(20)
+                baseline_exist = verify_if_baseline_exists(codigo_qp_formatado)
                 if baseline_exist:
-                    baseline_deleted = delete_if_baseline_exists(codigo_qp_formatado)
+                    self.status_label.config(text="Removendo baseline anterior...")
                     self.update_progress(25)
+                    baseline_deleted = delete_if_baseline_exists(codigo_qp_formatado)
                     if not baseline_deleted:
                         return
 
