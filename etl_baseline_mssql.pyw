@@ -74,7 +74,7 @@ def verify_if_baseline_exists(codigo_qp):
             query = f"SELECT cod_qp FROM enaplic_management.dbo.tb_baseline WHERE cod_qp LIKE '{codigo_qp}%'"
             cursor = conn.cursor()
             result = cursor.execute(query).fetchone()
-            return result if result is not None else None
+            return result is not None
     except Exception as ex:
         exibir_mensagem(f"Eureka® Falha de transação com banco de dados",
                         f"Não foi possível consultar a baseline {codigo_qp} na tabela tb_baseline.\n\n{str(ex)}"
@@ -131,6 +131,9 @@ def insert_baseline(self, dataframe):
 class ETLBaselineMSSQL:
     def __init__(self, window):
         window.title("Eureka® Monitor de progresso")
+        self.window = window
+        self.thread_stop_event = threading.Event()  # Sinalizador para interromper threads
+        self.thread = None
         self.start_time = time.time()
 
         self.qp_label = tk.Label(window, text="")
@@ -196,6 +199,7 @@ class ETLBaselineMSSQL:
                 self.status_label.config(text=f"✔️ Processo finalizado com sucesso!\n\n{elapsed:.3f} segundos"
                                               f"\n\n🦾🤖 EUREKA®")
                 self.update_progress(100)
+
             else:
                 message = 'Código da QP inválido! Por favor corrigir o código da QP no arquivo da baseline.'
                 raise Exception(message)
@@ -208,12 +212,19 @@ class ETLBaselineMSSQL:
             delete_file(excel_filepath)
 
     def start_task(self):
-        thread = threading.Thread(target=self.start_etl)
-        thread.start()
+        self.thread = threading.Thread(target=self.start_etl, daemon=True)
+        self.thread.start()
 
     def update_progress(self, value):
         self.progress['value'] = value
         root.update_idletasks()
+        
+    def on_close(self):
+        """Encerramento seguro da aplicação."""
+        self.thread_stop_event.set()  # Sinalizar para encerrar threads
+        if self.thread.is_alive():
+            self.thread.join(timeout=5)  # Aguardar o encerramento da thread
+        self.window.destroy()
 
 
 if __name__ == '__main__':
@@ -221,6 +232,11 @@ if __name__ == '__main__':
     username, password, database, server = setup_mssql()
     driver = '{SQL Server}'
     etlBaseline = ETLBaselineMSSQL(root)
+
+    # Configure o protocolo antes de iniciar qualquer tarefa
+    root.protocol("WM_DELETE_WINDOW", etlBaseline.on_close)  # Garantir fechamento seguro
+
+    # Inicie o processamento
     etlBaseline.start_task()
 
     root.attributes('-topmost', True)
